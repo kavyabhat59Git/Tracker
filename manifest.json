@@ -1,0 +1,17 @@
+{
+  "name": "Kavya 90 Day Plan",
+  "short_name": "90 Day Plan",
+  "description": "Kavya Bhat 90-Day Career Tracker",
+  "start_url": "./kavya_tracker_app.html",
+  "display": "standalone",
+  "background_color": "#0f0e0c",
+  "theme_color": "#c4603a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23c4603a'/><text y='140' x='30' font-size='120' fill='white'>🚀</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

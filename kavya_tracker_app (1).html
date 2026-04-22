@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<title>Kavya — 90 Day Plan</title>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#c4603a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0f0e0c;
+  --surface: #1a1816;
+  --surface2: #222018;
+  --border: #2e2b26;
+  --terra: #c4603a;
+  --terra-dim: rgba(196,96,58,0.15);
+  --sage: #5c7a5e;
+  --sage-dim: rgba(92,122,94,0.15);
+  --gold: #b8943a;
+  --gold-dim: rgba(184,148,58,0.15);
+  --cream: #f0ebe2;
+  --muted: #6b6560;
+  --white: #ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--cream);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  min-height:100vh;
+  padding-bottom:100px;
+}
+
+/* NAV */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;
+  padding:10px 0 16px;
+  z-index:100;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:none;color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.05em;
+  cursor:pointer;padding:4px 12px;transition:color 0.2s;
+}
+.nav-btn.active{color:var(--terra);}
+.nav-btn svg{width:20px;height:20px;}
+
+/* PAGES */
+.page{display:none;padding:0 0 20px;}
+.page.active{display:block;}
+
+/* HEADER */
+.page-header{
+  padding:52px 20px 20px;
+  background:linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+  position:sticky;top:0;z-index:10;
+}
+.page-eyebrow{
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--terra);margin-bottom:6px;
+}
+.page-title{
+  font-family:'Fraunces',serif;font-size:26px;font-weight:300;
+  color:var(--cream);line-height:1.1;
+}
+.page-title em{font-style:italic;color:var(--gold);}
+
+/* CARDS */
+.card{
+  margin:0 16px 12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.card-header{
+  padding:14px 16px 10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.card-title{
+  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  font-weight:500;
+}
+.card-title.terra{color:var(--terra);}
+.card-title.sage{color:var(--sage);}
+.card-title.gold{color:var(--gold);}
+
+/* HABIT ITEMS */
+.habit-item{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;
+  border-top:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.habit-item:active{background:rgba(255,255,255,0.03);}
+.habit-check{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.2s;
+}
+.habit-item.done .habit-check{
+  background:var(--sage);border-color:var(--sage);
+}
+.habit-item.done .habit-check::after{
+  content:'✓';color:white;font-size:12px;font-weight:600;
+}
+.habit-item.done .habit-label{
+  text-decoration:line-through;color:var(--muted);
+}
+.habit-label{font-size:14px;color:var(--cream);line-height:1.4;}
+.habit-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* PROGRESS BAR */
+.progress-wrap{padding:0 16px 14px;}
+.progress-bar{
+  height:4px;background:var(--border);border-radius:2px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--sage);border-radius:2px;
+  transition:width 0.4s ease;
+}
+.progress-label{
+  font-size:10px;color:var(--muted);margin-bottom:6px;
+  display:flex;justify-content:space-between;
+}
+
+/* WEEK ITEMS */
+.week-item{
+  padding:14px 16px;border-top:1px solid var(--border);
+}
+.week-num{
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--terra);margin-bottom:4px;
+}
+.week-theme{
+  font-family:'Fraunces',serif;font-size:16px;color:var(--cream);
+  margin-bottom:8px;
+}
+.week-actions{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.week-actions li{
+  font-size:12px;color:var(--muted);padding-left:14px;position:relative;
+  line-height:1.5;
+}
+.week-actions li::before{
+  content:'→';position:absolute;left:0;color:var(--terra);font-size:10px;
+  top:2px;
+}
+.week-status{
+  margin-top:10px;
+  display:flex;gap:8px;
+}
+.status-pill{
+  font-size:10px;letter-spacing:0.1em;padding:4px 10px;border-radius:20px;
+  border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all 0.15s;
+}
+.status-pill.todo{background:var(--border);color:var(--muted);}
+.status-pill.active-pill{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold);}
+.status-pill.done-pill{background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage);}
+
+/* COMPANY ITEMS */
+.company-item{
+  padding:13px 16px;border-top:1px solid var(--border);
+}
+.company-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.company-name{font-size:14px;font-weight:500;color:var(--cream);}
+.company-sector{font-size:11px;color:var(--muted);margin-top:2px;}
+.company-why{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;}
+.status-select{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--cream);font-family:'DM Sans',sans-serif;font-size:10px;
+  padding:4px 8px;border-radius:6px;cursor:pointer;flex-shrink:0;
+  -webkit-appearance:none;
+}
+.visa-yes{color:var(--sage);font-size:10px;margin-top:4px;}
+.visa-check{color:var(--gold);font-size:10px;margin-top:4px;}
+
+/* MONTHLY REVIEW */
+.review-section{margin:0 16px 16px;}
+.review-month-header{
+  padding:14px 16px;border-radius:10px 10px 0 0;
+  font-size:12px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;
+}
+.review-month-header.m1{background:var(--terra);color:white;}
+.review-month-header.m2{background:var(--sage);color:white;}
+.review-month-header.m3{background:var(--gold);color:white;}
+.review-items{
+  background:var(--surface);border:1px solid var(--border);
+  border-top:none;border-radius:0 0 10px 10px;overflow:hidden;
+}
+.review-item{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.review-item:last-child{border-bottom:none;}
+.review-label{font-size:12px;color:var(--cream);}
+.review-target{font-size:10px;color:var(--muted);}
+.review-input{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--cream);font-family:'DM Sans',sans-serif;font-size:13px;
+  padding:6px 10px;border-radius:6px;width:72px;text-align:center;
+}
+.review-textarea{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--cream);font-family:'DM Sans',sans-serif;font-size:12px;
+  padding:8px 10px;border-radius:6px;width:100%;margin-top:8px;
+  min-height:60px;resize:none;
+}
+
+/* STREAK BADGE */
+.streak-row{
+  display:flex;gap:10px;padding:0 16px 16px;
+}
+.streak-badge{
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;text-align:center;
+}
+.streak-num{
+  font-family:'Fraunces',serif;font-size:28px;color:var(--gold);
+}
+.streak-label{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:0.1em;}
+
+/* PHASE DIVIDER */
+.phase-divider{
+  margin:16px 16px 8px;
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:10px;
+}
+.phase-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* TOAST */
+.toast{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);
+  background:var(--sage);color:white;padding:10px 20px;border-radius:20px;
+  font-size:13px;transition:transform 0.3s ease;z-index:200;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:0;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✓ Nice work!</div>
+
+<!-- ═══ TODAY PAGE ═══ -->
+<div class="page active" id="page-today">
+  <div class="page-header">
+    <div class="page-eyebrow">Daily Check-in</div>
+    <div class="page-title">Today's <em>3 things</em></div>
+  </div>
+
+  <div class="streak-row">
+    <div class="streak-badge">
+      <div class="streak-num" id="streak-count">0</div>
+      <div class="streak-label">Day Streak</div>
+    </div>
+    <div class="streak-badge">
+      <div class="streak-num" id="done-count">0</div>
+      <div class="streak-label">Done Today</div>
+    </div>
+    <div class="streak-badge">
+      <div class="streak-num" id="total-done">0</div>
+      <div class="streak-label">Total Done</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title terra">🔴 Job Search</span>
+    </div>
+    <div class="habit-item" data-id="h1" onclick="toggleHabit(this)">
+      <div class="habit-check"></div>
+      <div><div class="habit-label">Send 1 application or research 1 company</div>
+      <div class="habit-sub">3–5 apps/week target</div></div>
+    </div>
+    <div class="habit-item" data-id="h2" onclick="toggleHabit(this)">
+      <div class="habit-check"></div>
+      <div><div class="habit-label">Message 1 person on LinkedIn</div>
+      <div class="habit-sub">Networking — not asking for jobs</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title sage">💚 Dance & Body</span>
+    </div>
+    <div class="habit-item" data-id="h3" onclick="toggleHabit(this)">
+      <div class="habit-check"></div>
+      <div><div class="habit-label">Movement practice done</div>
+      <div class="habit-sub">Bharatanatyam, Waacking, stretch — anything counts</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title gold">✍️ Brand Building</span>
+    </div>
+    <div class="habit-item" data-id="h4" onclick="toggleHabit(this)">
+      <div class="habit-check"></div>
+      <div><div class="habit-label">LinkedIn — 15 mins engage or draft post</div>
+      <div class="habit-sub">Read, comment, or write — all counts</div></div>
+    </div>
+    <div class="habit-item" data-id="h5" onclick="toggleHabit(this)">
+      <div class="habit-check"></div>
+      <div><div class="habit-label">Update tracker — log today's activity</div>
+      <div class="habit-sub">Companies tab, weekly goals, anything new</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="progress-wrap" style="padding-top:14px;">
+      <div class="progress-label">
+        <span style="color:var(--cream);font-size:11px;">Today's progress</span>
+        <span id="progress-text">0 / 5</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEKS PAGE ═══ -->
+<div class="page" id="page-weeks">
+  <div class="page-header">
+    <div class="page-eyebrow">90-Day Schedule</div>
+    <div class="page-title">Week by <em>week</em></div>
+  </div>
+
+  <div id="weeks-container"></div>
+</div>
+
+<!-- ═══ COMPANIES PAGE ═══ -->
+<div class="page" id="page-companies">
+  <div class="page-header">
+    <div class="page-eyebrow">Target Companies</div>
+    <div class="page-title">Where to <em>apply</em></div>
+  </div>
+  <div id="companies-container"></div>
+</div>
+
+<!-- ═══ REVIEW PAGE ═══ -->
+<div class="page" id="page-review">
+  <div class="page-header">
+    <div class="page-eyebrow">Monthly Review</div>
+    <div class="page-title">Track your <em>progress</em></div>
+  </div>
+  <div id="review-container"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="showPage('today',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Today
+  </button>
+  <button class="nav-btn" onclick="showPage('weeks',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Weeks
+  </button>
+  <button class="nav-btn" onclick="showPage('companies',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Companies
+  </button>
+  <button class="nav-btn" onclick="showPage('review',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Review
+  </button>
+</nav>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const weeks = [
+  {wk:1,phase:"M1",theme:"CV & LinkedIn Audit",actions:["Pull out current CV and LinkedIn — read them fresh","List every tech achievement AND every dance credential","Draft new CV headline targeting wellness tech QA","Identify 3 wellness tech companies to model your narrative on"]},
+  {wk:2,phase:"M1",theme:"CV Rewrite & Personal Narrative",actions:["Rewrite CV summary for wellness tech QA","Add dance/movement as a differentiator — not separate","Write your LinkedIn About section (200 words)","Draft your 1-line positioning statement"]},
+  {wk:3,phase:"M1",theme:"Company Research Sprint",actions:["Build target company list — aim for 20 companies","Research each: size, hiring, visa sponsor, product","Add statuses to Companies tab in this tracker","First LinkedIn post: 'What dancing taught me about QA'"]},
+  {wk:4,phase:"M1",theme:"Network Activation & LinkedIn Go-Live",actions:["Update LinkedIn profile fully — go live","Connect with 10 people at target wellness tech companies","Post LinkedIn content piece #2","Tell 2–3 trusted contacts about your pivot direction"]},
+  {wk:5,phase:"M2",theme:"Application Wave 1",actions:["Apply to 4 companies from your target list","Write tailored cover letters — mention the movement angle","Reach out to 2 people at target companies","LinkedIn post #3"]},
+  {wk:6,phase:"M2",theme:"Applications + Dance Teaching Outreach",actions:["Apply to 4 more companies","Email 3 London studios/corporate wellness re: workshops","Follow up on Wave 1 applications (10 days no reply)","LinkedIn post #4"]},
+  {wk:7,phase:"M2",theme:"Networking Deepens",actions:["Aim for 2 informational calls or coffees this week","Apply to 3–4 more companies","Prepare a short pitch for workshop/teaching enquiries","LinkedIn post #5 — share something from dance"]},
+  {wk:8,phase:"M2",theme:"Interview Prep + Teaching Line",actions:["If interviews coming — start QA technical + behavioural prep","Confirm at least 1 studio/corporate teaching interest","Apply 3–4 companies","LinkedIn post #6"]},
+  {wk:9,phase:"M2",theme:"Mid-Sprint Review",actions:["Review what's working — adjust messaging","Update all trackers with outreach and responses","Attend 1 London tech or dance/movement event","LinkedIn post #7"]},
+  {wk:10,phase:"M3",theme:"First Workshop Delivery",actions:["Deliver your first paid/formal Waacking or movement workshop","Document it: photos, feedback, attendance numbers","Apply 3–4 companies","LinkedIn post #8 — reflect on the workshop"]},
+  {wk:11,phase:"M3",theme:"Global Talent Visa Evidence",actions:["Create a folder: all performance photos, videos, press, credentials","Write a list of every significant dance achievement since 2016","Research Global Talent Visa — Tech Nation + Arts Council tracks","LinkedIn post #9"]},
+  {wk:12,phase:"M3",theme:"Pipeline Doubling Down",actions:["Identify 2–3 companies with active processes — prioritise them","Apply 3–4 new companies in strongest responding sector","Second workshop delivery if possible","LinkedIn post #10"]},
+  {wk:13,phase:"M3",theme:"90-Day Review & Next Quarter Plan",actions:["Complete Monthly Review for Month 3","Count: applications, conversations, workshops, posts","Identify what worked and what to double down on","Set goals for the next 90 days"]},
+];
+
+const companies = [
+  {name:"Unmind",sector:"Mental Health Tech",why:"London-based, QA team, visa sponsor, mission fit",visa:"Yes"},
+  {name:"Hinge Health",sector:"Digital Physio",why:"Movement rehab — your dance knowledge is product insight",visa:"Yes"},
+  {name:"Gympass / Wellhub",sector:"Corporate Wellness",why:"Aggregator, strong eng team, sponsors, London office",visa:"Yes"},
+  {name:"Kooth",sector:"Mental Health",why:"UK-founded, growing fast, QA roles regularly advertised",visa:"Yes"},
+  {name:"Strava",sector:"Movement Data",why:"London office, movement-first product, strong QA culture",visa:"Yes"},
+  {name:"Oura Ring",sector:"Wearables / Health",why:"Performance testing + movement data knowledge",visa:"EU/UK"},
+  {name:"Whoop",sector:"Fitness Wearables",why:"Athletic performance data — rare match with dance background",visa:"Check"},
+  {name:"Peloton",sector:"Fitness Tech",why:"Movement + tech convergence, you understand the product",visa:"Check"},
+  {name:"ClassPass",sector:"Fitness Booking",why:"You use products like this as an artist — insider edge",visa:"Check"},
+  {name:"Big Health",sector:"Digital Therapeutics",why:"UK-founded, CBT/sleep tech, growing QA team, sponsors",visa:"Yes"},
+  {name:"Calm",sector:"Mindfulness",why:"QA for wellness app — your movement practice is lived R&D",visa:"Check"},
+  {name:"Headspace",sector:"Mindfulness",why:"Global wellness leader, London presence, QA roles",visa:"Check"},
+  {name:"Vitality",sector:"Health Insurance Tech",why:"UK-based, large tech team, wellness-first culture, sponsors",visa:"Yes"},
+  {name:"Numan",sector:"Digital Health",why:"UK-founded, fast growth, QA hiring, sponsors",visa:"Yes"},
+  {name:"Zoe",sector:"Nutrition Science Tech",why:"Science-driven wellness, London, growing engineering team",visa:"Yes"},
+  {name:"YuLife",sector:"InsurTech / Wellness",why:"London-based, wellness gamification, strong tech team",visa:"Yes"},
+  {name:"Livi / KRY",sector:"Digital GP",why:"European digital health, London team, QA hiring",visa:"Yes"},
+  {name:"Big Health",sector:"Digital Therapeutics",why:"UK-founded, digital therapeutics, growing QA team",visa:"Yes"},
+  {name:"Ufonia",sector:"Health Tech AI",why:"UK AI health, QA critical for medical software",visa:"Yes"},
+  {name:"Humanly",sector:"Workplace Wellness",why:"HR + wellness convergence — interesting intersection",visa:"Check"},
+];
+
+const reviewData = [
+  {month:"MONTH 1",cls:"m1",label:"Position & Sharpen",metrics:[
+    {label:"Applications sent",target:"Target: 12–20",type:"num"},
+    {label:"LinkedIn posts published",target:"Target: 4",type:"num"},
+    {label:"New connections made",target:"Target: 20",type:"num"},
+    {label:"Companies fully researched",target:"Target: 20",type:"num"},
+    {label:"CV rewritten?",target:"Yes / No",type:"yn"},
+    {label:"LinkedIn profile updated?",target:"Yes / No",type:"yn"},
+    {label:"Month 1 biggest win",target:"",type:"text"},
+    {label:"What to do differently in Month 2",target:"",type:"text"},
+  ]},
+  {month:"MONTH 2",cls:"m2",label:"Activate & Apply",metrics:[
+    {label:"Applications sent this month",target:"Target: 16–20",type:"num"},
+    {label:"Interview invitations received",target:"Target: 2+",type:"num"},
+    {label:"Active interview processes",target:"Target: 1+",type:"num"},
+    {label:"LinkedIn posts published",target:"Target: 4",type:"num"},
+    {label:"Workshop / teaching confirmed?",target:"Yes / No",type:"yn"},
+    {label:"Dance events attended",target:"Target: 1",type:"num"},
+    {label:"Month 2 biggest win",target:"",type:"text"},
+    {label:"What to focus on in Month 3",target:"",type:"text"},
+  ]},
+  {month:"MONTH 3",cls:"m3",label:"Build & Compound",metrics:[
+    {label:"Total applications sent (all 3 months)",target:"Target: 40–56",type:"num"},
+    {label:"Active interview processes",target:"Target: 3",type:"num"},
+    {label:"Offers received",target:"Target: 1+",type:"num"},
+    {label:"Workshops delivered",target:"Target: 1–2",type:"num"},
+    {label:"GT Visa evidence folder created?",target:"Yes / No",type:"yn"},
+    {label:"LinkedIn posts total",target:"Target: 12",type:"num"},
+    {label:"90-day biggest win",target:"",type:"text"},
+    {label:"Next 90-day plan started?",target:"Yes / No",type:"yn"},
+  ]},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = JSON.parse(localStorage.getItem('kavya_state') || '{}');
+if(!state.habits) state.habits = {};
+if(!state.weekStatus) state.weekStatus = {};
+if(!state.companyStatus) state.companyStatus = {};
+if(!state.review) state.review = {};
+if(!state.streak) state.streak = 0;
+if(!state.totalDone) state.totalDone = 0;
+if(!state.lastDate) state.lastDate = '';
+
+function save(){ localStorage.setItem('kavya_state', JSON.stringify(state)); }
+
+// ─── TODAY ───────────────────────────────────────────────────────────────────
+const today = new Date().toDateString();
+if(state.lastDate !== today){
+  // reset daily habits
+  ['h1','h2','h3','h4','h5'].forEach(id => { state.habits[id] = false; });
+  // check streak
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  if(state.lastDate === yesterday.toDateString()){
+    // streak continues
+  } else {
+    state.streak = 0;
+  }
+  state.lastDate = today;
+  save();
+}
+
+function toggleHabit(el){
+  const id = el.dataset.id;
+  state.habits[id] = !state.habits[id];
+  if(state.habits[id]){ state.totalDone++; showToast('✓ Done!'); }
+  save();
+  renderToday();
+}
+
+function renderToday(){
+  const ids = ['h1','h2','h3','h4','h5'];
+  let done = 0;
+  ids.forEach(id => {
+    const el = document.querySelector('[data-id="'+id+'"]');
+    if(!el) return;
+    if(state.habits[id]){ el.classList.add('done'); done++; }
+    else { el.classList.remove('done'); }
+  });
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('total-done').textContent = state.totalDone;
+  const pct = (done/ids.length)*100;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-text').textContent = done+' / '+ids.length;
+  if(done === ids.length){ state.streak++; save(); }
+  document.getElementById('streak-count').textContent = state.streak;
+}
+
+// ─── WEEKS ───────────────────────────────────────────────────────────────────
+function buildWeeks(){
+  const c = document.getElementById('weeks-container');
+  let html = '';
+  let lastPhase = '';
+  const phaseNames = {M1:'Month 1 — Position',M2:'Month 2 — Activate',M3:'Month 3 — Build'};
+  const phaseColors = {M1:'var(--terra)',M2:'var(--sage)',M3:'var(--gold)'};
+
+  weeks.forEach(w => {
+    if(w.phase !== lastPhase){
+      html += `<div class="phase-divider" style="color:${phaseColors[w.phase]}">${phaseNames[w.phase]}</div>`;
+      lastPhase = w.phase;
+    }
+    const st = state.weekStatus[w.wk] || 'todo';
+    html += `<div class="card"><div class="week-item">
+      <div class="week-num">Week ${w.wk}</div>
+      <div class="week-theme">${w.theme}</div>
+      <ul class="week-actions">${w.actions.map(a=>`<li>${a}</li>`).join('')}</ul>
+      <div class="week-status">
+        <button class="status-pill ${st==='todo'?'todo':''}" onclick="setWeekStatus(${w.wk},'todo')">Not Started</button>
+        <button class="status-pill ${st==='active'?'active-pill':''}" onclick="setWeekStatus(${w.wk},'active')">In Progress</button>
+        <button class="status-pill ${st==='done'?'done-pill':''}" onclick="setWeekStatus(${w.wk},'done')">Done ✓</button>
+      </div>
+    </div></div>`;
+  });
+  c.innerHTML = html;
+}
+
+function setWeekStatus(wk, status){
+  state.weekStatus[wk] = status;
+  save();
+  buildWeeks();
+  if(status==='done') showToast('Week '+wk+' complete! 🎉');
+}
+
+// ─── COMPANIES ───────────────────────────────────────────────────────────────
+function buildCompanies(){
+  const c = document.getElementById('companies-container');
+  const statuses = ['Research','Applied','Interviewing','Offer','Rejected'];
+  let html = '<div class="card">';
+  companies.forEach((co,i) => {
+    const st = state.companyStatus[i] || 'Research';
+    const visaColor = co.visa==='Yes' ? 'visa-yes' : 'visa-check';
+    const visaIcon = co.visa==='Yes' ? '✓ Sponsors visas' : '⚑ Check visa';
+    html += `<div class="company-item">
+      <div class="company-top">
+        <div>
+          <div class="company-name">${co.name}</div>
+          <div class="company-sector">${co.sector}</div>
+        </div>
+        <select class="status-select" onchange="setCompanyStatus(${i},this.value)">
+          ${statuses.map(s=>`<option ${st===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="company-why">${co.why}</div>
+      <div class="${visaColor}">${visaIcon}</div>
+    </div>`;
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+function setCompanyStatus(i, status){
+  state.companyStatus[i] = status;
+  save();
+  if(status==='Offer') showToast('🎉 OFFER! Amazing!');
+  if(status==='Interviewing') showToast('💪 Interview secured!');
+}
+
+// ─── REVIEW ──────────────────────────────────────────────────────────────────
+function buildReview(){
+  const c = document.getElementById('review-container');
+  let html = '';
+  reviewData.forEach(m => {
+    html += `<div class="review-section">
+      <div class="review-month-header ${m.cls}">${m.month} — ${m.label}</div>
+      <div class="review-items">`;
+    m.metrics.forEach((met,i) => {
+      const key = m.cls+'_'+i;
+      const val = state.review[key] || '';
+      if(met.type==='text'){
+        html += `<div class="review-item" style="flex-direction:column;align-items:flex-start;">
+          <div class="review-label">${met.label}</div>
+          <textarea class="review-textarea" placeholder="Write here..." onchange="saveReview('${key}',this.value)">${val}</textarea>
+        </div>`;
+      } else {
+        html += `<div class="review-item">
+          <div><div class="review-label">${met.label}</div>
+          <div class="review-target">${met.target}</div></div>
+          <input class="review-input" type="${met.type==='num'?'number':'text'}" 
+            value="${val}" placeholder="${met.type==='yn'?'Yes/No':'0'}"
+            onchange="saveReview('${key}',this.value)"/>
+        </div>`;
+      }
+    });
+    html += '</div></div>';
+  });
+  c.innerHTML = html;
+}
+
+function saveReview(key, val){
+  state.review[key] = val;
+  save();
+}
+
+// ─── NAV ─────────────────────────────────────────────────────────────────────
+function showPage(name, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderToday();
+buildWeeks();
+buildCompanies();
+buildReview();
+</script>
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(r => console.log("SW registered"))
+      .catch(e => console.log("SW error", e));
+  });
+}
+</script>
+</body>
+</html>
